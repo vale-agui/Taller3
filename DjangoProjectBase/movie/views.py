@@ -123,3 +123,27 @@ def generate_bar_chart(data, xlabel, ylabel):
     buffer.close()
     graphic = base64.b64encode(image_png).decode('utf-8')
     return graphic
+
+def embedding_view(request):
+    """
+    Selecciona una película al azar, convierte su embedding de binario a un array
+    y lo muestra en la página web.
+    """
+    # Seleccionar una película al azar
+    movie = Movie.objects.order_by('?').first()
+    if not movie:
+        return render(request, 'embedding_view.html', {'error': "No hay películas en la base de datos."})
+
+    try:
+        # Convertir el embedding binario a un array de float32
+        embedding_vector = np.frombuffer(movie.emb, dtype=np.float32)
+        # Convertir el array a lista para enviarlo a la plantilla
+        embedding_list = embedding_vector.tolist()
+    except Exception as e:
+        return render(request, 'embedding_view.html', {'error': f"Error al leer el embedding para {movie.title}: {e}"})
+
+    context = {
+        'movie': movie,
+        'embedding_list': embedding_list,
+    }
+    return render(request, 'embedding_view.html', context)

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Embedding de Película</title>
+</head>
+<body>
+    {% if error %}
+        <h2>Error: {{ error }}</h2>
+    {% else %}
+        <h1>Embedding para: {{ movie.title }}</h1>
+        <p><strong>Primeros 10 valores del embedding:</strong></p>
+        <ul>
+            {% for value in embedding_list|slice:":10" %}
+                <li>{{ value }}</li>
+            {% endfor %}
+        </ul>
+        <p><strong>Embedding completo:</strong></p>
+        <pre>{{ embedding_list }}</pre>
+    {% endif %}
+</body>
+</html>
